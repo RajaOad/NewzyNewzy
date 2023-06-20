@@ -1,118 +1,684 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/react-splide/css/skyblue';
+import NewsList from './components/NewsList';
+import SideAdvertisement from './components/SideAdvertisement';
+import ListNews from './components/ListNews';
+import { useEffect, useState } from 'react';
+import DummyImage from './components/DummyImage';
 
-const inter = Inter({ subsets: ['latin'] })
+function Home({ topNews, technologyNews }) {
 
-export default function Home() {
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+      const country = 'pk'; // Replace with the desired country code
+
+      const categories = ['top', 'entertainment', 'technology', 'sports', 'business', 'politics', 'world'];
+      const allArticles = [];
+
+      try {
+        for (const category of categories) {
+          const url = `https://newsdata.io/api/1/news?apikey=${apiKey}&language=en&country=${country}&category=${category}`;
+          const response = await fetch(url);
+          const result = await response.json();
+          const categoryArticles = result.results.map((news) => ({ ...news, category }));
+          allArticles.push(...categoryArticles);
+        }
+        setArticles(allArticles);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const filterArticlesByCategory = (category) => {
+    return articles.filter((news) => news.category === category);
+  };
+
+  const topNewsData = filterArticlesByCategory('top');
+  const entertainmentNewsData = filterArticlesByCategory('entertainment');
+  const technologyNewsData = filterArticlesByCategory('technology');
+  const sportsNewsData = filterArticlesByCategory('sports');
+  const worldNewsData = filterArticlesByCategory('world');
+  const businessNewsData = filterArticlesByCategory('business');
+  const politicsNewsData = filterArticlesByCategory('politics');
+  console.log(worldNewsData)
+
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  function getDayFromDate(dateString) {
+    const dateObject = new Date(dateString);
+    const day = dateObject.getDate();
+    return day;
+  }
+  
+
+  function getMonthFromString(dateString) {
+    const dateObject = new Date(dateString);
+    const monthIndex = dateObject.getMonth();
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[monthIndex];
+  }
+  
+  
+  
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString();
+  };
+
+  function limitDescription(description, maxLength) {
+    if (description.length > maxLength) {
+      return `${description.slice(0, maxLength)}...`;
+    }
+    return description;
+  }
+
+  const Cap = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+
+  const handleArticleClick = (title) => {
+    const encodedTitle = encodeURIComponent(title);
+    router.push(`/user/shared/${encodedTitle}`);
+  };
+
+  
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
+    <>
+    <div className='flex flex-col mx-3 md:mx-0 lg:flex-row justify-evenly  mt-28'>
+
+
+
+      <div className='lg:w-3/5 w-full'>
+      <div className='md:mx-6 lg:mx-0'>
+      <Splide
+        className='w-full mx- lg:mx-0 mt-8'
+        aria-label='My Favorite Images'
+        options={{
+          rewind: true,
+          height: 500,
+          gap: '1rem',
+          type: 'loop',
+          perPage: 1,
+          perMove: 1,
+          autoplay: true,
+               breakpoints: {
+            1024: {
+              
+            },
+            768: {
+              height: 300,
+            },
+          }
+        }}
+      >
+        {topNews.map((article) => (
+
+          <SplideSlide key={article.id}>
+            <div
+        class="zoom relative w-full h-full overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
+        data-te-ripple-init
+        data-te-ripple-color="light">
+          
+        <img
+          src={article.image}
+          class="w-full h-full align-middle transition duration-300 ease-linear" />
+          
+         
+          
+        <a href={`/user/shared/${encodeURIComponent(article.title)}` } target="_blank">
+          <div
+            class="absolute top-0 right-0 bottom-0 left-0 h-full bg-[hsla(0,0%,0%,0.4)] w-full overflow-hidden bg-fixed">
+            <div class="flex h-full items-end justify-start">
+              <div class="m-6 text-white">
+                <h5 class="mb-3 text-lg md:text-3xl font-bold">{article.title}</h5>
+                <p className='text-xs font-semibold'>
+                  
+                    Published <u>{formatDate(article.createdAt)}</u> by {article.author}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed transition duration-300 ease-in-out hover:bg-[hsla(0,0%,99%,0.15)]"></div>
+        </a>
+      </div>
+          </SplideSlide>
+        ))}
+      </Splide>
+      </div>
+
+ 
+      <div class="container w-full my-16 md:px-6">
+
+<section class="text-center">
+  <h2 class="mb-12 text-center text-3xl font-bold">Top articles</h2>
+
+  <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">
+  {topNews.slice(0, 6).map((article) => (
+    <div class="mb-6 lg:mb-0">
+      <div class="relative mb-6 overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
+        data-te-ripple-init data-te-ripple-color="light">
+        <img src={article.image} class="w-full h-48" alt="Louvre" />
+        <a href={`/user/shared/${encodeURIComponent(article.title)}` } target='_blank'>
+          <div
+            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
+          </div>
+        </a>
+      </div>
+      <a href={`/user/shared/${encodeURIComponent(article.title)}` } target='_blank'>
+      <h5 class="mb-3 break-words text-lg font-bold">{limitDescription(article.title, 40)}</h5>
+      </a>
+   
+      <p class="mb-6 text-neutral-500 dark:text-neutral-300">
+        <small>Published <u>{formatDate(article.createdAt)}</u> by
+          <a href="#!"> {article.author}</a></small>
+      </p>
+      <p class="text-neutral-500 break-words dark:text-neutral-300">
+        {limitDescription(article.desc, 130)}
+      </p>
+    </div>
+  ))}
+
+  </div>
+</section>
+
+</div>
+
+      </div>
+
+     
+
+      <div className='lg:w-1/4 w-full'>
+<div className='md:px-6 lg:px-0'>
+      <SideAdvertisement/>
+      </div>
+
+    <div class="container md:mb-16 lg:mb-0 mt-28 md:px-6">
+
+  <section>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
+
+    {technologyNews.slice(0, 4).map((article) => (
+
+      <div
+        class="zoom relative overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
+        data-te-ripple-init
+        data-te-ripple-color="light">
+        <img
+          src={article.image}
+          class="w-full h-full align-middle transition duration-300 ease-linear" />
+        <a href="#!">
+          <div
+            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full bg-[hsla(0,0%,0%,0.4)] overflow-hidden bg-fixed">
+            <div class="flex h-full items-end justify-start">
+              <div class="m-6 text-white">
+                <h5 class="mb-3 text-lg font-bold">{article.title}</h5>
+                <p className='font-semibold'>
+                  
+                    Published <u>{formatDate(article.createdAt)}</u> by {article.author}
+                  
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed transition duration-300 ease-in-out hover:bg-[hsla(0,0%,99%,0.15)]"></div>
+        </a>
+      </div>
+
+      ))}
+
+    </div>
+  </section>
+
+</div>
+
+
+    </div>
+
+    </div>
+
+    
+
+<div className='flex flex-col md:flex-row justify-evenly'>
+
+  <div className='md:w-1/3 px-3 md:px-0 md:pl-6 lg:w-1/4'>
+
+  <div className=" py-20">
+      <h1 className="text-3xl border-gray-200 py-2 border font-semibold mb-4">Business News</h1>
+      <div className="grid grid-cols-1 gap-1">
+        {businessNewsData.slice(0, 5).map((article, index) => (
+          <NewsList key={index} article={article} />
+        ))}
+      </div>
+    </div>
+
+  </div>
+
+<div className='md:w-4/6 lg:h-3/4'>
+<div class="container mx-auto md:px-6">
+
+  <section>
+ 
+    <h2 class="mb-12 text-center text-3xl font-bold">Latest News</h2>
+
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+
+    {topNewsData.slice(0, 8).map((article) => (
+
+     
+    <div className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
+    <div className="flex flex-row sm:block hover-img">
+      <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
+        {/* <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt="alt title" /> */}
+        {article.image_url && !imageError ? (
+          <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt={article.title} onError={handleImageError} />
+        ) : (
+          <DummyImage
+            logoName="Newzy Newzy"
+            textColor="#168eea"
+            backgroundColor="#e2e8f0"
+            width="100%"
+            height="100%"
+          />
+        )}
+      </a>
+      <div className="py-0 sm:py-3 pl-3 sm:pl-0">
+        <h3 className="text-md break-words font-bold leading-tight mb-2">
+          <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
+           {article.title}
           </a>
+        </h3>
+        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.description, 100)}</p>
+        <a className="text-gray-500" href="#"><span className="inline-block h-3 border-l-2 border-red-600 mr-2"></span>{article.author}</a>
+      </div>
+    </div>
+  </div>
+
+      ))}
+
+    </div>
+  </section>
+
+</div>
+</div>
+
+
+</div>
+
+
+
+
+
+    <div class="w-full bg-blue-100 mx-auto md:mt-16 lg:mt-0 py-8 p-5 sm:p-10 md:p-16">
+    <div class="grid grid-cols-1 gap-10">
+
+     
+     
+
+
+<Splide
+        className='w-full mt-8'
+        aria-label='My Favorite Images'
+        options={{
+          rewind: true,
+          height: 450,
+          gap: '1rem',
+          type: 'loop',
+          perPage: 3,
+          perMove: 1,
+          color:'#4f46e5',
+          autoplay: true,
+          breakpoints: {
+            1024: {
+              perPage: 2,
+            },
+            768: {
+              perPage: 1,
+            },
+          }
+        }}
+      >
+        {worldNewsData.slice(0, 8).map((article) => (
+
+          <SplideSlide key={article.id}>
+           
+           <div class="rounded overflow-hidden shadow-lg">
+
+            <a href="#"></a>
+            <div class="relative">
+                <a href="#">
+                    {/* <img class="w-full h-72"
+                        src={article.image}/> */}
+
+{article.image_url && !imageError ? (
+          <img className="w-full h-72" src={article.image_url} alt={article.title} onError={handleImageError} />
+        ) : (
+          <DummyImage
+            logoName="Newzy Newzy"
+            textColor="#168eea"
+            backgroundColor="#e2e8f0"
+            width="100%"
+            height="18rem"
+          />
+        )}
+
+                    <div
+                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
+                    </div>
+                </a>
+                <a href="#!">
+                    <div
+                        class="absolute bottom-0 left-0 bg-blue-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        {Cap(article.category)}
+                    </div>
+                </a>
+
+                <a href="!#">
+                    <div
+                        class="text-sm absolute top-0 right-0 bg-blue-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        <span class="font-bold">{getDayFromDate(article.pubDate)}</span>
+                        <small>{getMonthFromString(article.pubDate)}</small>
+                    </div>
+                </a>
+            </div>
+            <div class="px-6 bg-white py-4">
+
+                <a href="#"
+                    class="font-semibold text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out">{limitDescription(article.title, 60)}</a>
+                <p class="text-gray-500 text-sm">
+                    The city that never sleeps
+                </p>
+            </div>
+          
         </div>
+
+          </SplideSlide>
+        ))}
+      </Splide>
+
       </div>
+</div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+<div className='flex mt-16 flex-col md:flex-row justify-evenly'>
+
+
+
+<div>
+<div class="container mx-auto md:px-6">
+
+  <section>
+ 
+    <h2 class="mb-12 text-center text-3xl font-bold">Entertainment News</h2>
+
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+
+    {entertainmentNewsData.slice(0, 8).map((article) => (
+
+     
+    <div className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
+    <div className="flex flex-row sm:block hover-img">
+      <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
+        {/* <img className="max-w-full h-full w-full mx-auto" src={article.image} alt="alt title" /> */}
+
+        {article.image_url && !imageError ? (
+          <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt={article.title} onError={handleImageError} />
+        ) : (
+          <DummyImage
+            logoName="Newzy Newzy"
+            textColor="#168eea"
+            backgroundColor="#e2e8f0"
+            width="100%"
+            height="100%"
+          />
+        )}
+        
+      </a>
+      <div className="py-0 sm:py-3 pl-3 sm:pl-0">
+        <h3 className="text-md break-words font-bold leading-tight mb-2">
+          <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
+           {article.title}
+          </a>
+        </h3>
+        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.description, 100)}</p>
+        <a className="text-gray-500" href="#"><span className="inline-block h-3 border-l-2 border-red-600 mr-2"></span>{article.author}</a>
       </div>
+    </div>
+  </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+      ))}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+    </div>
+  </section>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+</div>
+</div>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+<div className='px-3 md:pr-6'>
+
+<SideAdvertisement/>
+
+</div>
+
+</div>
+
+<div className='flex  mt-12 flex-col md:flex-row justify-evenly'>
+
+
+<div className='md:w-4/6 lg:w-3/4'>
+<div class="container mx-auto md:px-6">
+
+  <section>
+ 
+    <h2 class="mb-12 text-center text-3xl font-bold">Sports News</h2>
+
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+
+    {sportsNewsData.slice(0, 8).map((article) => (
+
+     
+    <div className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
+    <div className="flex flex-row sm:block hover-img">
+      <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
+        {/* <img className="max-w-full h-full w-full mx-auto" src={article.image} alt="alt title" /> */}
+
+        {article.image_url && !imageError ? (
+          <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt={article.title} onError={handleImageError} />
+        ) : (
+          <DummyImage
+            logoName="Newzy Newzy"
+            textColor="#168eea"
+            backgroundColor="#e2e8f0"
+            width="100%"
+            height="100%"
+          />
+        )}
+        
+      </a>
+      <div className="py-0 sm:py-3 pl-3 sm:pl-0">
+        <h3 className="text-md break-words font-bold leading-tight mb-2">
+          <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
+           {article.title}
+          </a>
+        </h3>
+        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.description, 100)}</p>
+        <a className="text-gray-500" href="#"><span className="inline-block h-3 border-l-2 border-red-600 mr-2"></span>{article.author}</a>
       </div>
-    </main>
-  )
+    </div>
+  </div>
+
+      ))}
+
+    </div>
+  </section>
+
+</div>
+</div>
+
+  <div className='md:w-1/3 px-3 md:px-0 md:pr-6 lg:w-1/4'>
+
+  <div className=" py-20">
+      <h1 className="text-3xl border-gray-200 py-2 border font-semibold mb-4">Politics News</h1>
+      <div className="grid grid-cols-1 gap-1">
+        {politicsNewsData.slice(0, 5).map((article, index) => (
+          <ListNews key={index} article={article} />
+        ))}
+      </div>
+    </div>
+
+  </div>
+
+
+
+</div>
+
+<div class="w-full bg-blue-100 mb-16 mx-auto md:mt-16 lg:mt-0 py-8 p-5 sm:p-10 md:p-16">
+    <div class="grid grid-cols-1 gap-10">
+
+     
+     
+
+
+<Splide
+        className='w-full mt-8'
+        aria-label='My Favorite Images'
+        options={{
+          rewind: true,
+          height: 400,
+          gap: '1rem',
+          type: 'loop',
+          perPage: 4,
+          perMove: 1,
+          autoplay: true,
+          breakpoints: {
+            1024: {
+              perPage: 2,
+            },
+            768: {
+              perPage: 1,
+            },
+          }
+        }}
+      >
+        {technologyNewsData.map((article) => (
+
+          <SplideSlide key={article.id}>
+           
+           <div class="rounded overflow-hidden shadow-lg">
+
+            <a href="#"></a>
+            <div class="relative">
+                <a href="#">
+                    {/* <img class="w-full h-60"
+                        src={article.image}/> */}
+
+{article.image_url && !imageError ? (
+          <img className="w-full h-60" src={article.image_url} alt={article.title} onError={handleImageError} />
+        ) : (
+          <DummyImage
+            logoName="Newzy Newzy"
+            textColor="#168eea"
+            backgroundColor="#e2e8f0"
+            width="100%"
+            height="15rem"
+          />
+        )}
+
+                    <div
+                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
+                    </div>
+                </a>
+                <a href="#!">
+                    <div
+                        class="absolute bottom-0 left-0 bg-blue-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        {Cap(article.category)}
+                    </div>
+                </a>
+
+                <a href="!#">
+                    <div
+                        class="text-sm absolute top-0 right-0 bg-blue-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        <span class="font-bold">{getDayFromDate(article.pubDate)}</span>
+                        <small>{getMonthFromString(article.pubDate)}</small>
+                    </div>
+                </a>
+            </div>
+            <div class="px-6 bg-white py-4">
+
+                <a href="#"
+                    class="font-semibold text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out">{limitDescription(article.title, 40)}</a>
+                <p class="text-gray-500 text-sm">
+                    The city that never sleeps
+                </p>
+            </div>
+          
+        </div>
+
+          </SplideSlide>
+        ))}
+      </Splide>
+
+      </div>
+</div>
+
+
+</>
+
+  );
 }
+
+export async function getServerSideProps() {
+  try {
+    const categories = [
+      { name: 'top', limit: 8 },
+      { name: 'sports', limit: 5 },
+      { name: 'technology', limit: 10 },
+    ];
+
+    const promises = categories.map(async (category) => {
+      const url = `${process.env.NEXT_PUBLIC_HOST}/api/getnewsbycategory?category=${category.name}&limit=${category.limit}`;
+      const response = await fetch(url);
+      const result = await response.json();
+      return result.categoryNews || [];
+    });
+
+    const [topNews, sportsNews, technologyNews] = await Promise.all(promises);
+
+    return {
+      props: {
+        topNews,
+        sportsNews,
+        technologyNews,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        topNews: [],
+        sportsNews: [],
+        technologyNews: [],
+      },
+    };
+    
+  }
+}
+
+
+export default Home;
