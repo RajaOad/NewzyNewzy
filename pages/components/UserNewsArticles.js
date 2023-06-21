@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NewsCard from './UserNewsCard';
+import cookie from 'js-cookie';
 
 const NewsArticles = () => {
 
+  // console.log(articles, token)
     useEffect(() => {
 
-        getNews()
+        // getNews()
 
     }, [])
     
-    const [articles, setArticles] = useState([])
+    // const [articles, setArticles] = useState([])
 
 
 
@@ -62,32 +64,32 @@ const NewsArticles = () => {
     }
 
 
-    const getNews = async () => {
+    // const getNews = async () => {
 
-        try {
+    //     try {
 
-            const url = `${process.env.NEXT_PUBLIC_HOST}/api/getusernews`;
-            const authToken = localStorage.getItem("token");
-            // const response = await fetch(url);
-            const response = await fetch(url, {
-              headers: {
-                'Authorization': `Bearer ${authToken}`,
-              },
-            });
-            const result = await response.json();
-            console.log(result.news)
-            setArticles(result.news)
-            console.log(articles)
+    //         const url = `${process.env.NEXT_PUBLIC_HOST}/api/getusernews`;
+    //         const authToken = localStorage.getItem("token");
+    //         // const response = await fetch(url);
+    //         const response = await fetch(url, {
+    //           headers: {
+    //             'Authorization': `Bearer ${authToken}`,
+    //           },
+    //         });
+    //         const result = await response.json();
+    //         console.log(result.news)
+    //         setArticles(result.news)
+    //         console.log(articles)
             
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error(error);
+    //         console.error(error);
             
-        }
+    //     }
 
        
 
-    }
+    // }
 
    
 
@@ -96,7 +98,7 @@ const NewsArticles = () => {
 
     
 
-  <section class="mb-32 text-center md:text-left">
+  {/* <section class="mb-32 text-center md:text-left">
   <ToastContainer
 position="top-left"
 autoClose={5000}
@@ -130,12 +132,35 @@ deleteNews={deleteNews}
 
  
 
-  </section>
+  </section> */}
  
 </>
 
 
   )
 }
+
+// export async function getServerSideProps(context) {
+//   const token = context.req.cookies.token || '';
+//   console.log(token);
+
+//   const url = `${process.env.NEXT_PUBLIC_HOST}/api/getusernews`;
+
+//   const response = await fetch(url, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+
+//   const result = await response.json();
+//   const articles = result.news || [];
+
+//   return {
+//     props: {
+//       articles,
+//       token,
+//     },
+//   };
+// }
 
 export default NewsArticles

@@ -3,50 +3,10 @@ import '@splidejs/react-splide/css/skyblue';
 import NewsList from './components/NewsList';
 import SideAdvertisement from './components/SideAdvertisement';
 import ListNews from './components/ListNews';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DummyImage from './components/DummyImage';
 
 function Home({ topNews, technologyNews }) {
-
-  const [articles, setArticles] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-      const country = 'pk'; // Replace with the desired country code
-
-      const categories = ['top', 'entertainment', 'technology', 'sports', 'business', 'politics', 'world'];
-      const allArticles = [];
-
-      try {
-        for (const category of categories) {
-          const url = `https://newsdata.io/api/1/news?apikey=${apiKey}&language=en&country=${country}&category=${category}`;
-          const response = await fetch(url);
-          const result = await response.json();
-          const categoryArticles = result.results.map((news) => ({ ...news, category }));
-          allArticles.push(...categoryArticles);
-        }
-        setArticles(allArticles);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const filterArticlesByCategory = (category) => {
-    return articles.filter((news) => news.category === category);
-  };
-
-  const topNewsData = filterArticlesByCategory('top');
-  const entertainmentNewsData = filterArticlesByCategory('entertainment');
-  const technologyNewsData = filterArticlesByCategory('technology');
-  const sportsNewsData = filterArticlesByCategory('sports');
-  const worldNewsData = filterArticlesByCategory('world');
-  const businessNewsData = filterArticlesByCategory('business');
-  const politicsNewsData = filterArticlesByCategory('politics');
-  console.log(worldNewsData)
 
   const [imageError, setImageError] = useState(false);
 
@@ -89,14 +49,6 @@ function Home({ topNews, technologyNews }) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-
-  const handleArticleClick = (title) => {
-    const encodedTitle = encodeURIComponent(title);
-    router.push(`/user/shared/${encodedTitle}`);
-  };
-
-  
-
   return (
     <>
     <div className='flex flex-col mx-3 md:mx-0 lg:flex-row justify-evenly  mt-28'>
@@ -130,22 +82,22 @@ function Home({ topNews, technologyNews }) {
 
           <SplideSlide key={article.id}>
             <div
-        class="zoom relative w-full h-full overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
+        className="zoom relative w-full h-full overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
         data-te-ripple-init
         data-te-ripple-color="light">
           
         <img
           src={article.image}
-          class="w-full h-full align-middle transition duration-300 ease-linear" />
+          className="w-full h-full align-middle transition duration-300 ease-linear" />
           
          
           
         <a href={`/user/shared/${encodeURIComponent(article.title)}` } target="_blank">
           <div
-            class="absolute top-0 right-0 bottom-0 left-0 h-full bg-[hsla(0,0%,0%,0.4)] w-full overflow-hidden bg-fixed">
-            <div class="flex h-full items-end justify-start">
-              <div class="m-6 text-white">
-                <h5 class="mb-3 text-lg md:text-3xl font-bold">{article.title}</h5>
+            className="absolute top-0 right-0 bottom-0 left-0 h-full bg-[hsla(0,0%,0%,0.4)] w-full overflow-hidden bg-fixed">
+            <div className="flex h-full items-end justify-start">
+              <div className="m-6 text-white">
+                <h5 className="mb-3 text-lg md:text-3xl font-bold">{article.title}</h5>
                 <p className='text-xs font-semibold'>
                   
                     Published <u>{formatDate(article.createdAt)}</u> by {article.author}
@@ -154,7 +106,7 @@ function Home({ topNews, technologyNews }) {
             </div>
           </div>
           <div
-            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed transition duration-300 ease-in-out hover:bg-[hsla(0,0%,99%,0.15)]"></div>
+            className="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed transition duration-300 ease-in-out hover:bg-[hsla(0,0%,99%,0.15)]"></div>
         </a>
       </div>
           </SplideSlide>
@@ -163,32 +115,32 @@ function Home({ topNews, technologyNews }) {
       </div>
 
  
-      <div class="container w-full my-16 md:px-6">
+      <div className="container w-full my-16 md:px-6">
 
-<section class="text-center">
-  <h2 class="mb-12 text-center text-3xl font-bold">Top articles</h2>
+<section className="text-center">
+  <h2 className="mb-12 text-center text-3xl font-bold">Top articles</h2>
 
-  <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">
+  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">
   {topNews.slice(0, 6).map((article) => (
-    <div class="mb-6 lg:mb-0">
-      <div class="relative mb-6 overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
+    <div key={article._id} className="mb-6 lg:mb-0">
+      <div className="relative mb-6 overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
         data-te-ripple-init data-te-ripple-color="light">
-        <img src={article.image} class="w-full h-48" alt="Louvre" />
+        <img src={article.image} className="w-full h-48" alt="Louvre" />
         <a href={`/user/shared/${encodeURIComponent(article.title)}` } target='_blank'>
           <div
-            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
+            className="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
           </div>
         </a>
       </div>
       <a href={`/user/shared/${encodeURIComponent(article.title)}` } target='_blank'>
-      <h5 class="mb-3 break-words text-lg font-bold">{limitDescription(article.title, 40)}</h5>
+      <h5 className="mb-3 break-words text-lg font-bold">{limitDescription(article.title, 40)}</h5>
       </a>
    
-      <p class="mb-6 text-neutral-500 dark:text-neutral-300">
+      <p className="mb-6 text-neutral-500 dark:text-neutral-300">
         <small>Published <u>{formatDate(article.createdAt)}</u> by
           <a href="#!"> {article.author}</a></small>
       </p>
-      <p class="text-neutral-500 break-words dark:text-neutral-300">
+      <p className="text-neutral-500 break-words dark:text-neutral-300">
         {limitDescription(article.desc, 130)}
       </p>
     </div>
@@ -208,27 +160,27 @@ function Home({ topNews, technologyNews }) {
       <SideAdvertisement/>
       </div>
 
-    <div class="container md:mb-16 lg:mb-0 mt-28 md:px-6">
+    <div className="container md:mb-16 lg:mb-0 mt-28 md:px-6">
 
   <section>
 
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
 
     {technologyNews.slice(0, 4).map((article) => (
 
-      <div
-        class="zoom relative overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
+      <div key={article._id}
+        className="zoom relative overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
         data-te-ripple-init
         data-te-ripple-color="light">
         <img
           src={article.image}
-          class="w-full h-full align-middle transition duration-300 ease-linear" />
+          className="w-full h-full align-middle transition duration-300 ease-linear" />
         <a href="#!">
           <div
-            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full bg-[hsla(0,0%,0%,0.4)] overflow-hidden bg-fixed">
-            <div class="flex h-full items-end justify-start">
-              <div class="m-6 text-white">
-                <h5 class="mb-3 text-lg font-bold">{article.title}</h5>
+            className="absolute top-0 right-0 bottom-0 left-0 h-full w-full bg-[hsla(0,0%,0%,0.4)] overflow-hidden bg-fixed">
+            <div className="flex h-full items-end justify-start">
+              <div className="m-6 text-white">
+                <h5 className="mb-3 text-lg font-bold">{article.title}</h5>
                 <p className='font-semibold'>
                   
                     Published <u>{formatDate(article.createdAt)}</u> by {article.author}
@@ -238,7 +190,7 @@ function Home({ topNews, technologyNews }) {
             </div>
           </div>
           <div
-            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed transition duration-300 ease-in-out hover:bg-[hsla(0,0%,99%,0.15)]"></div>
+            className="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed transition duration-300 ease-in-out hover:bg-[hsla(0,0%,99%,0.15)]"></div>
         </a>
       </div>
 
@@ -260,35 +212,35 @@ function Home({ topNews, technologyNews }) {
 
   <div className='md:w-1/3 px-3 md:px-0 md:pl-6 lg:w-1/4'>
 
-  <div className=" py-20">
+  {/* <div className=" py-20">
       <h1 className="text-3xl border-gray-200 py-2 border font-semibold mb-4">Business News</h1>
       <div className="grid grid-cols-1 gap-1">
-        {businessNewsData.slice(0, 5).map((article, index) => (
-          <NewsList key={index} article={article} />
+        {topNews.slice(0, 5).map((article) => (
+          <NewsList key={article._id} article={article} />
         ))}
       </div>
-    </div>
+    </div> */}
 
   </div>
 
 <div className='md:w-4/6 lg:h-3/4'>
-<div class="container mx-auto md:px-6">
+<div className="container mx-auto md:px-6">
 
   <section>
  
-    <h2 class="mb-12 text-center text-3xl font-bold">Latest News</h2>
+    <h2 className="mb-12 text-center text-3xl font-bold">Latest News</h2>
 
-    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 
-    {topNewsData.slice(0, 8).map((article) => (
+    {topNews.slice(0, 8).map((article) => (
 
      
-    <div className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
+    <div key={article._id} className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
     <div className="flex flex-row sm:block hover-img">
       <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
         {/* <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt="alt title" /> */}
-        {article.image_url && !imageError ? (
-          <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt={article.title} onError={handleImageError} />
+        {article.image && !imageError ? (
+          <img className="max-w-full h-full w-full mx-auto" src={article.image} alt={article.title} onError={handleImageError} />
         ) : (
           <DummyImage
             logoName="Newzy Newzy"
@@ -305,7 +257,7 @@ function Home({ topNews, technologyNews }) {
            {article.title}
           </a>
         </h3>
-        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.description, 100)}</p>
+        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.desc, 100)}</p>
         <a className="text-gray-500" href="#"><span className="inline-block h-3 border-l-2 border-red-600 mr-2"></span>{article.author}</a>
       </div>
     </div>
@@ -326,8 +278,8 @@ function Home({ topNews, technologyNews }) {
 
 
 
-    <div class="w-full bg-blue-100 mx-auto md:mt-16 lg:mt-0 py-8 p-5 sm:p-10 md:p-16">
-    <div class="grid grid-cols-1 gap-10">
+    <div className="w-full bg-blue-100 mx-auto md:mt-16 lg:mt-0 py-8 p-5 sm:p-10 md:p-16">
+    <div className="grid grid-cols-1 gap-10">
 
      
      
@@ -355,20 +307,20 @@ function Home({ topNews, technologyNews }) {
           }
         }}
       >
-        {worldNewsData.slice(0, 8).map((article) => (
+        {technologyNews.slice(0, 8).map((article) => (
 
-          <SplideSlide key={article.id}>
+          <SplideSlide key={article._id}>
            
-           <div class="rounded overflow-hidden shadow-lg">
+           <div className="rounded overflow-hidden shadow-lg">
 
             <a href="#"></a>
-            <div class="relative">
+            <div className="relative">
                 <a href="#">
-                    {/* <img class="w-full h-72"
+                    {/* <img className="w-full h-72"
                         src={article.image}/> */}
 
-{article.image_url && !imageError ? (
-          <img className="w-full h-72" src={article.image_url} alt={article.title} onError={handleImageError} />
+{article.image && !imageError ? (
+          <img className="w-full h-72" src={article.image} alt={article.title} onError={handleImageError} />
         ) : (
           <DummyImage
             logoName="Newzy Newzy"
@@ -380,30 +332,30 @@ function Home({ topNews, technologyNews }) {
         )}
 
                     <div
-                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
+                        className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
                     </div>
                 </a>
                 <a href="#!">
                     <div
-                        class="absolute bottom-0 left-0 bg-blue-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        className="absolute bottom-0 left-0 bg-blue-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
                         {Cap(article.category)}
                     </div>
                 </a>
 
                 <a href="!#">
                     <div
-                        class="text-sm absolute top-0 right-0 bg-blue-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
-                        <span class="font-bold">{getDayFromDate(article.pubDate)}</span>
-                        <small>{getMonthFromString(article.pubDate)}</small>
+                        className="text-sm absolute top-0 right-0 bg-blue-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        <span className="font-bold">{getDayFromDate(article.createdAt)}</span>
+                        <small>{getMonthFromString(article.createdAt)}</small>
                     </div>
                 </a>
             </div>
-            <div class="px-6 bg-white py-4">
+            <div className="px-6 bg-white py-4">
 
                 <a href="#"
-                    class="font-semibold text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out">{limitDescription(article.title, 60)}</a>
-                <p class="text-gray-500 text-sm">
-                    The city that never sleeps
+                    className="font-semibold text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out">{limitDescription(article.title, 60)}</a>
+                <p className="text-gray-500 text-sm">
+                    {limitDescription(article.desc, 40)}
                 </p>
             </div>
           
@@ -421,24 +373,24 @@ function Home({ topNews, technologyNews }) {
 
 
 <div>
-<div class="container mx-auto md:px-6">
+<div className="container mx-auto md:px-6">
 
   <section>
  
-    <h2 class="mb-12 text-center text-3xl font-bold">Entertainment News</h2>
+    <h2 className="mb-12 text-center text-3xl font-bold">Entertainment News</h2>
 
-    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 
-    {entertainmentNewsData.slice(0, 8).map((article) => (
+    {topNews.slice(0, 8).map((article) => (
 
      
-    <div className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
+    <div key={article._id} className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
     <div className="flex flex-row sm:block hover-img">
       <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
         {/* <img className="max-w-full h-full w-full mx-auto" src={article.image} alt="alt title" /> */}
 
-        {article.image_url && !imageError ? (
-          <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt={article.title} onError={handleImageError} />
+        {article.image && !imageError ? (
+          <img className="max-w-full h-full w-full mx-auto" src={article.image} alt={article.title} onError={handleImageError} />
         ) : (
           <DummyImage
             logoName="Newzy Newzy"
@@ -456,7 +408,7 @@ function Home({ topNews, technologyNews }) {
            {article.title}
           </a>
         </h3>
-        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.description, 100)}</p>
+        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.desc, 100)}</p>
         <a className="text-gray-500" href="#"><span className="inline-block h-3 border-l-2 border-red-600 mr-2"></span>{article.author}</a>
       </div>
     </div>
@@ -482,24 +434,24 @@ function Home({ topNews, technologyNews }) {
 
 
 <div className='md:w-4/6 lg:w-3/4'>
-<div class="container mx-auto md:px-6">
+<div className="container mx-auto md:px-6">
 
   <section>
  
-    <h2 class="mb-12 text-center text-3xl font-bold">Sports News</h2>
+    <h2 className="mb-12 text-center text-3xl font-bold">Sports News</h2>
 
-    <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 
-    {sportsNewsData.slice(0, 8).map((article) => (
+    {topNews.slice(0, 8).map((article) => (
 
      
-    <div className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
+    <div key={article._id} className="flex-shrink max-w-full w-full px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
     <div className="flex flex-row sm:block hover-img">
       <a href="https://www.brecorder.com/news/40248190/gold-listless-as-markets-assess-recent-us-data-and-fed-cues" target="_blank">
         {/* <img className="max-w-full h-full w-full mx-auto" src={article.image} alt="alt title" /> */}
 
-        {article.image_url && !imageError ? (
-          <img className="max-w-full h-full w-full mx-auto" src={article.image_url} alt={article.title} onError={handleImageError} />
+        {article.image && !imageError ? (
+          <img className="max-w-full h-full w-full mx-auto" src={article.image} alt={article.title} onError={handleImageError} />
         ) : (
           <DummyImage
             logoName="Newzy Newzy"
@@ -517,7 +469,7 @@ function Home({ topNews, technologyNews }) {
            {article.title}
           </a>
         </h3>
-        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.description, 100)}</p>
+        <p className="hidden text-sm md:block break-words text-gray-600 leading-tight mb-1">{limitDescription(article.desc, 100)}</p>
         <a className="text-gray-500" href="#"><span className="inline-block h-3 border-l-2 border-red-600 mr-2"></span>{article.author}</a>
       </div>
     </div>
@@ -533,14 +485,14 @@ function Home({ topNews, technologyNews }) {
 
   <div className='md:w-1/3 px-3 md:px-0 md:pr-6 lg:w-1/4'>
 
-  <div className=" py-20">
+  {/* <div className=" py-20">
       <h1 className="text-3xl border-gray-200 py-2 border font-semibold mb-4">Politics News</h1>
       <div className="grid grid-cols-1 gap-1">
-        {politicsNewsData.slice(0, 5).map((article, index) => (
-          <ListNews key={index} article={article} />
+        {topNews.slice(0, 5).map((article) => (
+          <ListNews key={article._id} article={article} />
         ))}
       </div>
-    </div>
+    </div> */}
 
   </div>
 
@@ -548,8 +500,8 @@ function Home({ topNews, technologyNews }) {
 
 </div>
 
-<div class="w-full bg-blue-100 mb-16 mx-auto md:mt-16 lg:mt-0 py-8 p-5 sm:p-10 md:p-16">
-    <div class="grid grid-cols-1 gap-10">
+<div className="w-full bg-blue-100 mx-auto md:mt-16 lg:mt-0 py-8 p-5 sm:p-10 md:p-16">
+    <div className="grid grid-cols-1 gap-10">
 
      
      
@@ -576,20 +528,20 @@ function Home({ topNews, technologyNews }) {
           }
         }}
       >
-        {technologyNewsData.map((article) => (
+        {technologyNews.map((article) => (
 
-          <SplideSlide key={article.id}>
+          <SplideSlide key={article._id}>
            
-           <div class="rounded overflow-hidden shadow-lg">
+           <div className="rounded overflow-hidden shadow-lg">
 
             <a href="#"></a>
-            <div class="relative">
+            <div className="relative">
                 <a href="#">
-                    {/* <img class="w-full h-60"
+                    {/* <img className="w-full h-60"
                         src={article.image}/> */}
 
-{article.image_url && !imageError ? (
-          <img className="w-full h-60" src={article.image_url} alt={article.title} onError={handleImageError} />
+{article.image && !imageError ? (
+          <img className="w-full h-60" src={article.image} alt={article.title} onError={handleImageError} />
         ) : (
           <DummyImage
             logoName="Newzy Newzy"
@@ -601,30 +553,30 @@ function Home({ topNews, technologyNews }) {
         )}
 
                     <div
-                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
+                        className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
                     </div>
                 </a>
                 <a href="#!">
                     <div
-                        class="absolute bottom-0 left-0 bg-blue-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        className="absolute bottom-0 left-0 bg-blue-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
                         {Cap(article.category)}
                     </div>
                 </a>
 
                 <a href="!#">
                     <div
-                        class="text-sm absolute top-0 right-0 bg-blue-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
-                        <span class="font-bold">{getDayFromDate(article.pubDate)}</span>
-                        <small>{getMonthFromString(article.pubDate)}</small>
+                        className="text-sm absolute top-0 right-0 bg-blue-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
+                        <span className="font-bold">{getDayFromDate(article.createdAt)}</span>
+                        <small>{getMonthFromString(article.createdAt)}</small>
                     </div>
                 </a>
             </div>
-            <div class="px-6 bg-white py-4">
+            <div className="px-6 bg-white py-4">
 
                 <a href="#"
-                    class="font-semibold text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out">{limitDescription(article.title, 40)}</a>
-                <p class="text-gray-500 text-sm">
-                    The city that never sleeps
+                    className="font-semibold text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out">{limitDescription(article.title, 40)}</a>
+                <p className="text-gray-500 text-sm">
+                    {limitDescription(article.desc, 40)}
                 </p>
             </div>
           

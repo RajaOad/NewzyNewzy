@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FaHome, FaPlus, FaList, FaPowerOff, FaBars } from 'react-icons/fa';
 import { GiNewspaper } from 'react-icons/gi';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [token, setToken] = useState('')
+
+  useEffect(() => {
+  
+    setToken(localStorage.getItem('token'))
+  }, [])
+  
+
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+
+    
   };
 
   const  router = useRouter();
 
   const logout = ()=> {
     localStorage.removeItem('token')
+    cookie.remove('token')
     // setUser({value: null})
     // setKey(Math.random())
     router.push('/user/login')
   }
+
+
 
   return (
     <div className="flex min-h-screen">
@@ -50,7 +65,7 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
-              <Link legacyBehavior href="/user/usernews" passHref>
+              <Link legacyBehavior href={`/user/usernews?token=${token}`} passHref>
                 <a className="flex items-center py-2 px-4 rounded hover:bg-blue-600">
                   <FaList className="mr-3 text-xl" />
                   <span>Your Articles</span>

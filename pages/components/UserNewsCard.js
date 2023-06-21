@@ -44,7 +44,7 @@ const handleCloseModal = () => {
 
   return (
     <>
-  <div className="mb-6 flex flex-wrap">
+  {/* <div className="mb-6 flex flex-wrap">
 
   <div>
   
@@ -135,7 +135,7 @@ const handleCloseModal = () => {
     </div>
   </div>
 )}
-    </div>
+    </div> */}
 
 
     </>

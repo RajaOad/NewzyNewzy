@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import cookie from 'js-cookie';
 
 const Login = () => {
 
@@ -40,6 +41,7 @@ const Login = () => {
 
           if(response.success) {
             localStorage.setItem('token', response.token);
+            cookie.set('token', response.token);
             toast.success('You are successfully logged in', {
               position: "top-left",
               autoClose: 5000,

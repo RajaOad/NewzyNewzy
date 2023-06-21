@@ -14,8 +14,6 @@ export default function App({ Component, pageProps }) {
     '/user/usernews',
     `/user/newspost/${encodeURIComponent(router.query.slug)}`,
   ];
-
-console.log(`/user/newspost/${router.query.slug}`)
   // Check if the current pathname is in the excludedPaths array
 
   const shouldRenderNavbar = !excludedPaths.includes(
