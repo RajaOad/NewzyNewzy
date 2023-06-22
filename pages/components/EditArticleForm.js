@@ -24,10 +24,10 @@ const EditArticleForm = ({ article }) => {
   useEffect(() => {
     setTitle(article.title);
     setDescription(article.desc);
-    setLanguage(article.language)
+    setLanguage(article.lang)
     setCategory(article.category);
     setAuthor(article.author);
-    setImage(article.imgUrl);
+    setImage(article.image);
   }, [article]);
 
   const handleSubmit = async (e) => {
@@ -51,13 +51,13 @@ const EditArticleForm = ({ article }) => {
         return;
       }
 
-      const id = article.slug;
-      console.log(id)
+      const id = article._id;
+
     const data = {title, desc: description, lang: language, category, author, image, id}
    
-    const url = `${process.env.NEXT_PUBLIC_HOST}/api/updatenews`;
+    const url = `/api/updatenews`;
     const authToken = localStorage.getItem('token');
-    console.log(data)
+  
 
 
     // Perform any additional logic such as validation, data formatting, etc.
@@ -71,7 +71,6 @@ const EditArticleForm = ({ article }) => {
         body: JSON.stringify(data),
       })
       let response = await res.json()
-      console.log(response)
 
       if (response.success) {
 

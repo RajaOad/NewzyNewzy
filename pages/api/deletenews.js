@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 const handler = async (req, res) => {
 
     const {id }= req.query;
-    console.log(req.query)
 
     const token = req.headers.authorization?.split(" ")[1];
 if (!token) {

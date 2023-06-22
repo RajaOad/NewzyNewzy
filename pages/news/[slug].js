@@ -42,7 +42,7 @@ const Slug = () => {
 
       const response = await fetch(url);
       const result = await response.json();
-      console.log(result.results);
+  
       setArticles(result.results || []); // Set empty array if results is null or undefined
       setNextPage(result.nextPage);
       setHasMore(result.nextPage !== null);
@@ -62,7 +62,7 @@ const Slug = () => {
     try {
       const response = await fetch(url);
       const result = await response.json();
-      console.log(result.results);
+     
 
       setArticles((prevArticles) => [...prevArticles, ...result.results]);
       setNextPage(result.nextPage);

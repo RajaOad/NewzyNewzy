@@ -21,7 +21,7 @@ if (!token) {
   
 
         const {title, desc, lang, category, author, image, id} = req.body;
-console.log(id)
+
         let newNews = {}
     
         if(title){newNews.title = title};

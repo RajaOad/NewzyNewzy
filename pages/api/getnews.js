@@ -4,7 +4,7 @@ import News from "@/models/News";
  const handler = async (req, res) => {
 
 try {
-  let news = await News.find();
+  let news = await News.find().sort({ createdAt: -1 });
     
     res.json({news})
 } catch (error) {

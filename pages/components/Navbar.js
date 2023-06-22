@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { FaBars, FaTimes, FaUser } from 'react-icons/fa';
 import { GiNewspaper } from 'react-icons/gi';
 import { motion } from 'framer-motion';
+import cookie from 'js-cookie';
+
 
 const Navbar = () => {
   const Cap = (string) => {
@@ -71,6 +73,13 @@ const Navbar = () => {
   const closeUserDropdown = () => {
     setIsUserDropdownOpen(false);
   };
+
+  const logout = ()=> {
+    localStorage.removeItem('token')
+    cookie.remove('token')
+    window.location.reload();
+  }
+
 
   return (
     <motion.nav
@@ -237,21 +246,29 @@ const Navbar = () => {
             role="menuitem"
             onClick={closeUserDropdown}
           >
-            Profile
+            Dashboard
           </a>
           <a
-            href="#"
+            href="/user/addnews"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-200"
             role="menuitem"
             onClick={closeUserDropdown}
           >
-            Settings
+            Publish Article
+          </a>
+          <a
+            href="/user/usernews"
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-200"
+            role="menuitem"
+            onClick={closeUserDropdown}
+          >
+            Your Articles
           </a>
           <a
             href="#"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-200"
             role="menuitem"
-            onClick={closeUserDropdown}
+            onClick={logout}
           >
             Logout
           </a>

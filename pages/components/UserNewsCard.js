@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
 import EditArticleForm from './EditArticleForm';
 
-const NewsCard = ({title, desc, category, language, author, imgUrl, time, slug, deleteNews}) => {
+const UserNewsCard = ({title, desc, category, language, author, imgUrl, time, slug, deleteNews}) => {
 
   const article = {title, desc, category, language, author, imgUrl, time, slug}
 
@@ -54,7 +54,7 @@ const handleCloseModal = () => {
         <div className="relative mb-6 overflow-hidden rounded-lg bg-cover bg-no-repeat shadow-lg dark:shadow-black/20"
           data-te-ripple-init data-te-ripple-color="light">
           <img src={imgUrl} className="w-full" alt="Louvre" />
-          <Link legacyBehavior href={`/user/newspost/${encodeURIComponent(article.title)}`} passHref={true}>
+          <Link legacyBehavior href={`/user/newspost/${encodeURIComponent(title)}`} passHref={true}>
           <a>
             <div
               className="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100 bg-[hsla(0,0%,98.4%,.15)]">
@@ -99,7 +99,7 @@ const handleCloseModal = () => {
       />
     </div>
 
-        <Link legacyBehavior href={`/user/newspost/${encodeURIComponent(article.title)}`} passHref={true}> 
+        <Link legacyBehavior href={`/user/newspost/${encodeURIComponent(title)}`} passHref={true}> 
         <h5 className="mb-3 text-lg font-bold cursor-pointer">{title}</h5>
         </Link>
         
@@ -142,4 +142,4 @@ const handleCloseModal = () => {
   )
 }
 
-export default NewsCard
+export default UserNewsCard

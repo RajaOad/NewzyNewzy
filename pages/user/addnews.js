@@ -56,12 +56,12 @@ const Addnews = () => {
 
     const data = [{title, desc: description, lang: language, category, author, image}]
     const authToken = localStorage.getItem('token');
-    console.log(data)
+  
 
 
     // Perform any additional logic such as validation, data formatting, etc.
 
-    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/addnews`, {
+    let res = await fetch(`/api/addnews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const Addnews = () => {
         body: JSON.stringify(data),
       })
       let response = await res.json()
-      console.log(response)
+   
 
       if (response.success) {
 

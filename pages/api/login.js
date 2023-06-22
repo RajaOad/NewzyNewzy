@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 const handler = async (req, res) => {
 
     if (req.method == 'POST') {
-        console.log(req.body);
+        
 
         try {
 
@@ -15,7 +15,7 @@ const handler = async (req, res) => {
 
              // Check if the email is registered
              const user = await User.findOne({email});
-             console.log(user)
+             
 
              
              if (!user) {

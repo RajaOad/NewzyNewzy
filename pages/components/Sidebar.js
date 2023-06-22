@@ -65,7 +65,7 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
-              <Link legacyBehavior href={`/user/usernews?token=${token}`} passHref>
+              <Link legacyBehavior href={`/user/usernews`} passHref>
                 <a className="flex items-center py-2 px-4 rounded hover:bg-blue-600">
                   <FaList className="mr-3 text-xl" />
                   <span>Your Articles</span>
