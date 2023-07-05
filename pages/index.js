@@ -20,7 +20,7 @@ function Home() {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const url2 = `${process.env.NEXT_PUBLIC_HOST}/api/getnews`;
+          const url2 = `/api/getnews`;
           const res = await fetch(url2);
           const newsData = await res.json();
           const allNews = newsData.news;
@@ -37,7 +37,7 @@ function Home() {
           ];
   
           const promises = categories.map(async (category) => {
-            const url = `${process.env.NEXT_PUBLIC_HOST}/api/getnewsbycategory?category=${category.name}&limit=${category.limit}`;
+            const url = `/api/getnewsbycategory?category=${category.name}&limit=${category.limit}`;
             const response = await fetch(url);
             const result = await response.json();
             return result.categoryNews || [];
