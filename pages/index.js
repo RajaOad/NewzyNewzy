@@ -1,14 +1,85 @@
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css/skyblue';
 import SideAdvertisement from './components/SideAdvertisement';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DummyImage from './components/DummyImage';
 
-function Home({ allNews, topNews, technologyNews, sportsNews, entertainmentNews, businessNews, politicsNews, worldNews }) {
+function Home() {
+ const [imageError, setImageError] = useState(false);
+    const [allNews, setAllNews] = useState([]);
+    const [topNews, setTopNews] = useState([]);
+    const [sportsNews, setSportsNews] = useState([]);
+    const [worldNews, setWorldNews] = useState([]);
+    const [businessNews, setBusinessNews] = useState([]);
+    const [politicsNews, setPoliticsNews] = useState([]);
+    const [technologyNews, setTechnologyNews] = useState([]);
+    const [entertainmentNews, setEntertainmentNews] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const url2 = `${process.env.NEXT_PUBLIC_HOST}/api/getnews`;
+          const res = await fetch(url2);
+          const newsData = await res.json();
+          const allNews = newsData.news;
+          setAllNews(allNews);
+  
+          const categories = [
+            { name: 'top', limit: 20 },
+            { name: 'sports', limit: 10 },
+            { name: 'world', limit: 10 },
+            { name: 'business', limit: 10 },
+            { name: 'politics', limit: 10 },
+            { name: 'technology', limit: 10 },
+            { name: 'entertainment', limit: 10 },
+          ];
+  
+          const promises = categories.map(async (category) => {
+            const url = `${process.env.NEXT_PUBLIC_HOST}/api/getnewsbycategory?category=${category.name}&limit=${category.limit}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            return result.categoryNews || [];
+          });
+  
+          const [
+            topNews,
+            sportsNews,
+            worldNews,
+            businessNews,
+            politicsNews,
+            technologyNews,
+            entertainmentNews,
+          ] = await Promise.all(promises);
+  
+          setTopNews(topNews);
+          setSportsNews(sportsNews);
+          setWorldNews(worldNews);
+          setBusinessNews(businessNews);
+          setPoliticsNews(politicsNews);
+          setTechnologyNews(technologyNews);
+          setEntertainmentNews(entertainmentNews);
+          setLoading(false);
+        } catch (error) {
+          console.error(error);
+          setError(error);
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    if (loading) {
+      return <p>Loading...</p>;
+    }
+  
+    if (error) {
+      return <p>Error: {error.message}</p>;
+    }
 
-
-
-  const [imageError, setImageError] = useState(false);
+ 
 
   const handleImageError = () => {
     setImageError(true);
@@ -660,66 +731,5 @@ function Home({ allNews, topNews, technologyNews, sportsNews, entertainmentNews,
 
   );
 }
-
-export async function getServerSideProps() {
-
-  try {
-
-    const url2 = `{process.env.NEXT_PUBLIC_HOST}/api/getnews`;
-    const res = await fetch(url2);
-    const newsData = await res.json();
-    const allNews = newsData.news;
-
-    const categories = [
-      { name: 'top', limit: 20 },
-      { name: 'sports', limit: 10 },
-      { name: 'world', limit: 10 },
-      { name: 'business', limit: 10 },
-      { name: 'politics', limit: 10 },
-      { name: 'technology', limit: 10 },
-      { name: 'entertainment', limit: 10 },
-    ];
-
-    const promises = categories.map(async (category) => {
-      const url = `{process.env.NEXT_PUBLIC_HOST}/api/getnewsbycategory?category=${category.name}&limit=${category.limit}`;
-      const response = await fetch(url);
-      const result = await response.json();
-      return result.categoryNews || [];
-    });
-
-    const [topNews, sportsNews, worldNews, businessNews, politicsNews, technologyNews, entertainmentNews] = await Promise.all(promises);
-
-
-
-    return {
-      props: {
-        allNews,
-        topNews,
-        sportsNews,
-        worldNews,
-        businessNews,
-        politicsNews,
-        technologyNews,
-        entertainmentNews,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      props: {
-        allNews: [],
-        topNews: [],
-        sportsNews: [],
-        worldNews: [],
-        businessNews: [],
-        politicsNews: [],
-        technologyNews: [],
-        entertainmentNews: [],
-      },
-    };
-    
-  }
-}
-
 
 export default Home;
